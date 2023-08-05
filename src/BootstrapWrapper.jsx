@@ -14,4 +14,6 @@ const urls = {
   local: "http://localhost:5001/remote.cjs",
 };
 
-export const BootstrapComponent = ({ url, ...rest }) => <RemoteComponent url={urls.github} {...rest}></RemoteComponent>;
+const BootstrapWrapper = ({ url, ...rest }) => <RemoteComponent url={urls.local} {...rest}></RemoteComponent>;
+
+export default BootstrapWrapper;

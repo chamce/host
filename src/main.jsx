@@ -1,13 +1,13 @@
 import ReactDOM from "react-dom/client";
 import React from "react";
 
-import { BootstrapComponent } from "./BootstrapComponent.jsx";
+import BootstrapWrapper from "./BootstrapWrapper.jsx";
 import App from "./App.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BootstrapComponent>
+    <BootstrapWrapper>
       <App></App>
-    </BootstrapComponent>
+    </BootstrapWrapper>
   </React.StrictMode>,
 );
