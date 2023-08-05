@@ -12,8 +12,10 @@ const requires = createRequires({
 
 const RemoteComponent = createRemoteComponent({ requires });
 
-const remoteUrl = 'http://localhost:5001/remote.cjs';
+const localUrl = 'http://localhost:5001/remote.cjs';
+const githubUrl =
+  'https://raw.githubusercontent.com/chamce/remote/master/docs/remote.cjs';
 
-export const Component = ({ url, ...rest }) => (
-  <RemoteComponent url={remoteUrl} {...rest}></RemoteComponent>
+export const BootstrapComponent = ({ url, ...rest }) => (
+  <RemoteComponent url={githubUrl} {...rest}></RemoteComponent>
 );
