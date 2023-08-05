@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import { useState } from "react";
+import viteLogo from "/vite.svg";
+
+import reactLogo from "./assets/react.svg";
+import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -10,40 +11,23 @@ function App() {
     <>
       <div className="text-center vstack gap-3">
         <div className="hstack gap-4 justify-content-center flex-wrap">
-          <a
-            href="https://vitejs.dev"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img src={viteLogo} className="logo" alt="Vite logo" />
+          <a href="https://vitejs.dev" rel="noreferrer" target="_blank">
+            <img className="logo" alt="Vite logo" src={viteLogo} />
           </a>
-          <a
-            href="https://react.dev"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img
-              src={reactLogo}
-              className="logo react"
-              alt="React logo"
-            />
+          <a href="https://react.dev" rel="noreferrer" target="_blank">
+            <img className="logo react" alt="React logo" src={reactLogo} />
           </a>
         </div>
         <div className="display-4">Vite + React</div>
         <div>
-          <button
-            className="btn btn-primary btn-outset"
-            onClick={() => setCount((count) => count + 1)}
-          >
+          <button onClick={() => setCount((count) => count + 1)} className="btn btn-primary btn-outset">
             count is {count}
           </button>
         </div>
         <div>
           Edit <code>src/App.jsx</code> and save to test HMR
         </div>
-        <div className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </div>
+        <div className="read-the-docs">Click on the Vite and React logos to learn more</div>
       </div>
     </>
   );
