@@ -1,10 +1,10 @@
+import viteLogo from "/icons/vite.svg";
 import { useState } from "react";
-import viteLogo from "/vite.svg";
 
-import reactLogo from "./assets/react.svg";
-import "./App.css";
+import reactLogo from "../assets/react.svg";
+import "../styles/App.css";
 
-function App() {
+const App = ({ routes }) => {
   const [count, setCount] = useState(0);
 
   return (
@@ -28,9 +28,10 @@ function App() {
           Edit <code>src/App.jsx</code> and save to test HMR
         </div>
         <div className="read-the-docs">Click on the Vite and React logos to learn more</div>
+        <div>{routes}</div>
       </div>
     </>
   );
-}
+};
 
 export default App;
