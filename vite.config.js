@@ -26,5 +26,6 @@ export default defineConfig({
     outDir: "docs",
   },
   plugins: [react(), eslint()],
+  server: { open: true },
   base: "",
 });
