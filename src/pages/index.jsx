@@ -1,3 +1,3 @@
-const Page = () => <h1>Chance Whitaker</h1>;
+const Page = () => <>Chance Whitaker</>;
 
 export default Page;

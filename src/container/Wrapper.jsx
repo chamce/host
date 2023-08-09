@@ -5,6 +5,6 @@ const object = {
   localhost: "http://localhost:5001/remote.cjs",
 };
 
-const Wrapper = ({ url, ...rest }) => <RemoteComponent url={object.localhost} {...rest}></RemoteComponent>;
+const Wrapper = ({ url, ...rest }) => <RemoteComponent url={object.github} {...rest}></RemoteComponent>;
 
 export default Wrapper;
