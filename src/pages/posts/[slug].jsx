@@ -1,9 +1,14 @@
 import { useParams } from "react-router-dom";
 
-const Page = () => {
+const Component = () => {
   const { slug } = useParams();
 
-  return slug + " Posts Route";
+  return (
+    <div>
+      <h6>{slug} Posts</h6>
+      <div>The user could view {slug} posts here</div>
+    </div>
+  );
 };
 
-export default Page;
+export default Component;

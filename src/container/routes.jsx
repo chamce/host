@@ -1,43 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import React, { Fragment } from "react";
 
-const PRESERVED = import.meta.globEager("/src/pages/(_app|404).jsx");
-
-const ROUTES = import.meta.globEager("/src/pages/**/[a-z[]*.jsx");
-
-const preserved = Object.keys(PRESERVED).reduce((preserved, file) => {
-  const key = file.replace(/\/src\/pages\/|\.jsx$/g, "");
-  return { ...preserved, [key]: PRESERVED[file].default };
-}, {});
-
-const routes = Object.keys(ROUTES).map((route) => {
-  const path = route
-    .replace(/\/src\/pages|index|\.jsx$/g, "")
-    .replace(/\[\.{3}.+\]/, "*")
-    .replace(/\[(.+)\]/, ":$1");
-
-  return { component: ROUTES[route].default, path };
-});
-
-export const PagesRoutes = () => {
-  const App = preserved?.["_app"] || Fragment;
-  const NotFound = preserved?.["404"] || Fragment;
-
-  return (
-    <App
-      routes={
-        <Routes>
-          {routes.map(({ component: Component = Fragment, path }) => (
-            <Route element={<Component></Component>} path={path} key={path} />
-          ))}
-          <Route element={<NotFound></NotFound>} path="*" />
-        </Routes>
-      }
-    ></App>
-  );
-};
-
-function nestRoutes(routes) {
+const nestRoutes = (routes) => {
   const sortedPaths = Array.from(routes).sort((a, b) => a.path.split("/").length - b.path.split("/").length);
 
   const tree = {};
@@ -72,36 +36,81 @@ function nestRoutes(routes) {
 
   // ! remember to check out the react page about handling nested state
   return tree;
-}
+};
+
+const PRESERVED = import.meta.globEager("/src/pages/(_app|404).jsx");
+
+const ROUTES = import.meta.globEager("/src/pages/**/[a-z[]*.jsx");
+
+const preserved = Object.keys(PRESERVED).reduce((preserved, file) => {
+  const key = file.replace(/\/src\/pages\/|\.jsx$/g, "");
+  return { ...preserved, [key]: PRESERVED[file].default };
+}, {});
+
+const routes = Object.keys(ROUTES).map((route) => {
+  const path = route
+    .replace(/\/src\/pages|index|\.jsx$/g, "")
+    .replace(/\[\.{3}.+\]/, "*")
+    .replace(/\[(.+)\]/, ":$1");
+
+  return { component: ROUTES[route].default, path };
+});
+
+const YourRoutes = ({ children }) => {
+  return (
+    <Routes>
+      {routes.map(({ component: Component = Fragment, path }) => (
+        <Route element={<Component></Component>} path={path} key={path} />
+      ))}
+      {children}
+    </Routes>
+  );
+};
 
 const nestedRoutes = nestRoutes(routes);
 
-function RouteTree({ tree, top }) {
+const RoutesSubtree = ({ tree, root }) => {
   const { component, children } = tree;
-  const childKeys = typeof children === "object" ? Object.keys(children) : [];
+  const childNodes = typeof children === "object" ? Object.keys(children) : [];
 
   return (
     <li>
-      {top} {component ? "(component @ route)" : ""}
-      {childKeys.length > 0 && (
-        <ol>
-          {childKeys.map((top, index) => (
-            <RouteTree tree={children[top]} key={index} top={top} />
+      {root} {component ? "(contains page)" : ""}
+      {childNodes.length > 0 && (
+        <ul>
+          {childNodes.map((currentRoot, index) => (
+            <RoutesSubtree tree={children[currentRoot]} root={currentRoot} key={index} />
           ))}
-        </ol>
+        </ul>
       )}
     </li>
   );
-}
+};
 
-export function RoutesVisualization() {
-  const childKeys = Object.keys(nestedRoutes);
+const RoutesTree = () => {
+  const childNodes = Object.keys(nestedRoutes);
 
   return (
     <ul>
-      {childKeys.map((top, index) => (
-        <RouteTree tree={nestedRoutes[top]} key={index} top={top} />
+      {childNodes.map((currentRoot, index) => (
+        <RoutesSubtree tree={nestedRoutes[currentRoot]} root={currentRoot} key={index} />
       ))}
     </ul>
   );
-}
+};
+
+export const YourPages = () => {
+  const App = preserved?.["_app"] || Fragment;
+  const NotFound = preserved?.["404"] || Fragment;
+
+  return (
+    <App
+      routes={
+        <YourRoutes>
+          <Route element={<NotFound></NotFound>} path="*"></Route>
+        </YourRoutes>
+      }
+      routesTree={<RoutesTree></RoutesTree>}
+    ></App>
+  );
+};

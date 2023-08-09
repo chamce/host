@@ -1,9 +1,14 @@
 import { useParams } from "react-router-dom";
 
-const Page = () => {
+const Component = () => {
   const params = useParams();
 
-  return `Posts Wildcard Route (${params["*"]})`;
+  return (
+    <div>
+      <h6>Invalid Posts ({params["*"]})</h6>
+      <div>There is nothing to find here</div>
+    </div>
+  );
 };
 
-export default Page;
+export default Component;

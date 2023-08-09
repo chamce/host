@@ -1,9 +1,14 @@
 import { useParams } from "react-router-dom";
 
-const Page = () => {
+const Component = () => {
   const { user } = useParams();
 
-  return `${user}'s Settings Route`;
+  return (
+    <div>
+      <h6>{user}'s Settings</h6>
+      <div>{user} could edit their settings here</div>
+    </div>
+  );
 };
 
-export default Page;
+export default Component;

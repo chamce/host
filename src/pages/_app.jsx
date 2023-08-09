@@ -1,11 +1,10 @@
 import viteLogo from "/icons/vite.svg";
 import { useState } from "react";
 
-import { RoutesVisualization } from "../container/routes";
 import reactLogo from "../assets/react.svg";
 import "../styles/App.css";
 
-const App = ({ routes }) => {
+const App = ({ routesTree, routes }) => {
   const [count, setCount] = useState(0);
 
   return (
@@ -34,12 +33,12 @@ const App = ({ routes }) => {
         </div>
       </div>
       <div className="border border-dark p-2">
-        <h2>Component @ Current Route</h2>
+        <h2>Page @ Current Route</h2>
         {routes}
       </div>
       <div className="border border-dark p-2">
-        <h2>Routes</h2>
-        <RoutesVisualization></RoutesVisualization>
+        <h2>Routes Tree</h2>
+        {routesTree}
       </div>
     </>
   );
