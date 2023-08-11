@@ -1,7 +1,26 @@
+// src/routes.jsx
+
 import { Routes, Route } from "react-router-dom";
 import React, { Fragment } from "react";
 
-const nestRoutes = (routes) => {
+const PRESERVED = import.meta.globEager("/src/pages/(_app|404).jsx");
+const ROUTES = import.meta.globEager("/src/pages/**/[a-z[]*.jsx");
+
+const preserved = Object.keys(PRESERVED).reduce((preserved, file) => {
+  const key = file.replace(/\/src\/pages\/|\.jsx$/g, "");
+  return { ...preserved, [key]: PRESERVED[file].default };
+}, {});
+
+const routes = Object.keys(ROUTES).map((route) => {
+  const path = route
+    .replace(/\/src\/pages|index|\.jsx$/g, "")
+    .replace(/\[\.{3}.+\]/, "*")
+    .replace(/\[(.+)\]/, ":$1");
+
+  return { component: ROUTES[route].default, path };
+});
+
+const createRouteTree = (routes) => {
   const sortedPaths = Array.from(routes).sort((a, b) => a.path.split("/").length - b.path.split("/").length);
 
   const tree = {};
@@ -28,44 +47,12 @@ const nestRoutes = (routes) => {
     });
   });
 
-  // ! remember to check out the react page about handling nested state
   return tree;
 };
 
-const PRESERVED = import.meta.globEager("/src/pages/(_app|404).jsx");
+const routeTree = createRouteTree(routes);
 
-const ROUTES = import.meta.globEager("/src/pages/**/[a-z[]*.jsx");
-
-const preserved = Object.keys(PRESERVED).reduce((preserved, file) => {
-  const key = file.replace(/\/src\/pages\/|\.jsx$/g, "");
-  return { ...preserved, [key]: PRESERVED[file].default };
-}, {});
-
-const routes = Object.keys(ROUTES).map((route) => {
-  const path = route
-    .replace(/\/src\/pages|index|\.jsx$/g, "")
-    .replace(/\[\.{3}.+\]/, "*")
-    .replace(/\[(.+)\]/, ":$1");
-
-  return { component: ROUTES[route].default, path };
-});
-
-const nestedRoutes = nestRoutes(routes);
-
-const NestedRoutes = ({ fallbackElement, tree }) => {
-  const nodes = Object.keys(tree);
-
-  return (
-    <Routes>
-      {nodes.map((nextPath) => (
-        <Fragment key={nextPath}>{renderRoutesNode(tree[nextPath], nextPath)}</Fragment>
-      ))}
-      <Route element={fallbackElement} path="*"></Route>
-    </Routes>
-  );
-};
-
-const renderRoutesNode = (tree, currentPath) => {
+const renderRoute = (tree, previousSubPath) => {
   const { component: Component, children } = tree;
   const nodes = Object.keys(children);
 
@@ -76,11 +63,12 @@ const renderRoutesNode = (tree, currentPath) => {
           <Component></Component>
         </div>
       }
-      path={currentPath.substring(1)}
-      key={currentPath}
+      path={previousSubPath.substring(1)}
     >
       {nodes.length > 0 ? (
-        nodes.map((nextPath) => <Fragment key={nextPath}>{renderRoutesNode(children[nextPath], nextPath)}</Fragment>)
+        nodes.map((nextSubPath) => (
+          <Fragment key={nextSubPath}>{renderRoute(children[nextSubPath], nextSubPath)}</Fragment>
+        ))
       ) : (
         <></>
       )}
@@ -88,10 +76,23 @@ const renderRoutesNode = (tree, currentPath) => {
   ) : (
     <>
       {nodes.length > 0 &&
-        nodes.map((nextPath) => (
-          <Fragment key={nextPath}>{renderRoutesNode(children[nextPath], currentPath + nextPath)}</Fragment>
+        nodes.map((nextSubPath) => (
+          <Fragment key={nextSubPath}>{renderRoute(children[nextSubPath], previousSubPath + nextSubPath)}</Fragment>
         ))}
     </>
+  );
+};
+
+const NestedRoutes = ({ fallbackElement, tree }) => {
+  const nodes = Object.keys(tree);
+
+  return (
+    <Routes>
+      {nodes.map((subPath) => (
+        <Fragment key={subPath}>{renderRoute(tree[subPath], subPath)}</Fragment>
+      ))}
+      <Route element={fallbackElement} path="*"></Route>
+    </Routes>
   );
 };
 
@@ -104,8 +105,8 @@ const RoutesSubList = ({ branch, root }) => {
       {root} {component ? "(page)" : ""}
       {nodes.length > 0 && (
         <ul>
-          {nodes.map((branchRoot, index) => (
-            <RoutesSubList branch={children[branchRoot]} root={branchRoot} key={index} />
+          {nodes.map((branchRoot) => (
+            <RoutesSubList branch={children[branchRoot]} root={branchRoot} key={branchRoot}></RoutesSubList>
           ))}
         </ul>
       )}
@@ -118,21 +119,10 @@ const RoutesList = ({ tree }) => {
 
   return (
     <ul className="m-0">
-      {nodes.map((branchRoot, index) => (
-        <RoutesSubList branch={tree[branchRoot]} root={branchRoot} key={index} />
+      {nodes.map((branchRoot) => (
+        <RoutesSubList branch={tree[branchRoot]} root={branchRoot} key={branchRoot}></RoutesSubList>
       ))}
     </ul>
-  );
-};
-
-const AppRoutes = ({ fallbackElement, routes }) => {
-  return (
-    <Routes>
-      {routes.map(({ component: Component = Fragment, path }) => (
-        <Route element={<Component></Component>} path={path} key={path}></Route>
-      ))}
-      <Route element={fallbackElement} path="*"></Route>
-    </Routes>
   );
 };
 
@@ -149,17 +139,10 @@ export const Pages = () => {
               <NotFound></NotFound>
             </div>
           }
-          tree={nestedRoutes}
-        />
+          tree={routeTree}
+        ></NestedRoutes>
       }
-      routesList={<RoutesList tree={nestedRoutes} />}
+      routesTree={<RoutesList tree={routeTree}></RoutesList>}
     ></App>
   );
 };
-
-/*
-TODO clean up routes code
-TODO routes tree/list could instead be a dynamic nav list 
-TODO - dynamic routes should have text boxes (with limited character options) allowing the user to specify where to navigate
-TODO - also think about dynamic navigation between nested paths using relative paths and react router dom's "navigate"
-*/

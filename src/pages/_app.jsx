@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 
 import "../styles/App.css";
 
-const App = ({ routesList, routes }) => {
+const App = ({ routesTree, routes }) => {
   const { pathname } = useLocation();
 
   return (
@@ -99,7 +99,7 @@ const App = ({ routesList, routes }) => {
         </div>
         <div className="p-3 border border-primary rounded">
           <h2>Routes Tree</h2>
-          {routesList}
+          {routesTree}
         </div>
       </div>
     </>
