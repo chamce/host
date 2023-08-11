@@ -91,7 +91,7 @@ const App = ({ routesList, routes }) => {
             </div>
             <div className="p-3 border border-warning rounded">
               <h3>
-                Current Page <span className="h4 text-break">({pathname})</span>
+                Current Route <span className="h4 text-break">({pathname})</span>
               </h3>
               {routes}
             </div>

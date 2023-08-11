@@ -2,12 +2,10 @@ import { Outlet } from "react-router-dom";
 
 const Component = () => {
   return (
-    <div>
-      <div>Landing page</div>
-      <div>
-        <Outlet></Outlet>
-      </div>
-    </div>
+    <>
+      <h5>Index page</h5>
+      <Outlet></Outlet>
+    </>
   );
 };
 

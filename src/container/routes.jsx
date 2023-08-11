@@ -70,7 +70,15 @@ const renderRoutesNode = (tree, currentPath) => {
   const nodes = Object.keys(children);
 
   return Component ? (
-    <Route element={<Component></Component>} path={currentPath.substring(1)} key={currentPath}>
+    <Route
+      element={
+        <div className="p-3 border border-dark rounded">
+          <Component></Component>
+        </div>
+      }
+      path={currentPath.substring(1)}
+      key={currentPath}
+    >
       {nodes.length > 0 ? (
         nodes.map((nextPath) => <Fragment key={nextPath}>{renderRoutesNode(children[nextPath], nextPath)}</Fragment>)
       ) : (
@@ -93,7 +101,7 @@ const RoutesSubList = ({ branch, root }) => {
 
   return (
     <li>
-      {root} {component ? "(contains page)" : ""}
+      {root} {component ? "(page)" : ""}
       {nodes.length > 0 && (
         <ul>
           {nodes.map((branchRoot, index) => (
@@ -134,7 +142,16 @@ export const Pages = () => {
 
   return (
     <App
-      routes={<NestedRoutes fallbackElement={<NotFound></NotFound>} tree={nestedRoutes} />}
+      routes={
+        <NestedRoutes
+          fallbackElement={
+            <div className="p-3 border border-dark rounded">
+              <NotFound></NotFound>
+            </div>
+          }
+          tree={nestedRoutes}
+        />
+      }
       routesList={<RoutesList tree={nestedRoutes} />}
     ></App>
   );

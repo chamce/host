@@ -2,12 +2,10 @@ import { Outlet } from "react-router-dom";
 
 const Component = () => {
   return (
-    <div>
-      <div>Edit your profile settings</div>
-      <div>
-        <Outlet></Outlet>
-      </div>
-    </div>
+    <>
+      <h5>Profile settings page</h5>
+      <Outlet></Outlet>
+    </>
   );
 };
 

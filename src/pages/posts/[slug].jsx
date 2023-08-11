@@ -4,12 +4,10 @@ const Component = () => {
   const { slug } = useParams();
 
   return (
-    <div>
-      <div>View {slug} posts</div>
-      <div>
-        <Outlet></Outlet>
-      </div>
-    </div>
+    <>
+      <h5>{slug} posts page</h5>
+      <Outlet></Outlet>
+    </>
   );
 };
 

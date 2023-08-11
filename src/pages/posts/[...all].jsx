@@ -4,12 +4,10 @@ import { Outlet } from "react-router-dom";
 const Component = () => {
   // const params = useParams();
   return (
-    <div>
-      <div>Invalid posts route</div>
-      <div>
-        <Outlet></Outlet>
-      </div>
-    </div>
+    <>
+      <h5>Posts 404 page</h5>
+      <Outlet></Outlet>
+    </>
   );
 };
 

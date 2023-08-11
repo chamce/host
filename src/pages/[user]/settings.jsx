@@ -4,12 +4,10 @@ const Component = () => {
   const { user } = useParams();
 
   return (
-    <div>
-      <div>{user}'s settings page</div>
-      <div>
-        <Outlet></Outlet>
-      </div>
-    </div>
+    <>
+      <h5>{user}'s settings page</h5>
+      <Outlet></Outlet>
+    </>
   );
 };
 

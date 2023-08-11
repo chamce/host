@@ -2,12 +2,10 @@ import { Outlet } from "react-router-dom";
 
 const Component = () => {
   return (
-    <div>
-      <div>No matching route found</div>
-      <div>
-        <Outlet></Outlet>
-      </div>
-    </div>
+    <>
+      <h5>404 page</h5>
+      <Outlet></Outlet>
+    </>
   );
 };
 
