@@ -9,7 +9,7 @@ const App = ({ routesTree, routes }) => {
     <>
       <h1>Wrapper</h1>
       <div className="vstack gap-3">
-        <div className="p-3 border border-info rounded">
+        <div className="p-3 border border-primary rounded">
           <h2>App</h2>
           <div className="vstack gap-2">
             <div className="accordion accordion-flush" id="accordionFlushExample">
@@ -97,8 +97,8 @@ const App = ({ routesTree, routes }) => {
             </div>
           </div>
         </div>
-        <div className="p-3 border border-info rounded">
-          <h2>Pages Folder</h2>
+        <div className="p-3 border border-primary rounded">
+          <h2>Routes Tree</h2>
           {routesTree}
         </div>
       </div>
