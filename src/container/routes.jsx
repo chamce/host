@@ -20,13 +20,7 @@ const nestRoutes = (routes) => {
     const lastIndex = array.length - 1;
 
     array.forEach((string, index) => {
-      if (!(string in branch)) {
-        if (index === lastIndex) {
-          branch[string] = {};
-        } else {
-          branch[string] = { children: {} };
-        }
-      }
+      if (!(string in branch)) branch[string] = { children: {} };
 
       if (index === lastIndex) branch[string].component = component;
 
@@ -56,30 +50,54 @@ const routes = Object.keys(ROUTES).map((route) => {
   return { component: ROUTES[route].default, path };
 });
 
-const YourRoutes = ({ children }) => {
+const nestedRoutes = nestRoutes(routes);
+
+const NestedRoutes = ({ fallbackElement, tree }) => {
+  const nodes = Object.keys(tree);
+
   return (
     <Routes>
-      {routes.map(({ component: Component = Fragment, path }) => (
-        <Route element={<Component></Component>} path={path} key={path} />
+      {nodes.map((nextPath) => (
+        <Fragment key={nextPath}>{renderRoutesNode(tree[nextPath], nextPath)}</Fragment>
       ))}
-      {children}
+      <Route element={fallbackElement} path="*"></Route>
     </Routes>
   );
 };
 
-const nestedRoutes = nestRoutes(routes);
+const renderRoutesNode = (tree, currentPath) => {
+  const { component: Component, children } = tree;
+  const nodes = Object.keys(children);
 
-const RoutesSubtree = ({ tree, root }) => {
-  const { component, children } = tree;
-  const childNodes = typeof children === "object" ? Object.keys(children) : [];
+  return Component ? (
+    <Route element={<Component></Component>} path={currentPath.substring(1)} key={currentPath}>
+      {nodes.length > 0 ? (
+        nodes.map((nextPath) => <Fragment key={nextPath}>{renderRoutesNode(children[nextPath], nextPath)}</Fragment>)
+      ) : (
+        <></>
+      )}
+    </Route>
+  ) : (
+    <>
+      {nodes.length > 0 &&
+        nodes.map((nextPath) => (
+          <Fragment key={nextPath}>{renderRoutesNode(children[nextPath], currentPath + nextPath)}</Fragment>
+        ))}
+    </>
+  );
+};
+
+const RoutesSubList = ({ branch, root }) => {
+  const { component, children } = branch;
+  const nodes = Object.keys(children);
 
   return (
     <li>
       {root} {component ? "(contains page)" : ""}
-      {childNodes.length > 0 && (
+      {nodes.length > 0 && (
         <ul>
-          {childNodes.map((currentRoot, index) => (
-            <RoutesSubtree tree={children[currentRoot]} root={currentRoot} key={index} />
+          {nodes.map((branchRoot, index) => (
+            <RoutesSubList branch={children[branchRoot]} root={branchRoot} key={index} />
           ))}
         </ul>
       )}
@@ -87,30 +105,44 @@ const RoutesSubtree = ({ tree, root }) => {
   );
 };
 
-const RoutesTree = () => {
-  const childNodes = Object.keys(nestedRoutes);
+const RoutesList = ({ tree }) => {
+  const nodes = Object.keys(tree);
 
   return (
     <ul className="m-0">
-      {childNodes.map((currentRoot, index) => (
-        <RoutesSubtree tree={nestedRoutes[currentRoot]} root={currentRoot} key={index} />
+      {nodes.map((branchRoot, index) => (
+        <RoutesSubList branch={tree[branchRoot]} root={branchRoot} key={index} />
       ))}
     </ul>
   );
 };
 
-export const YourPages = () => {
+const AppRoutes = ({ fallbackElement, routes }) => {
+  return (
+    <Routes>
+      {routes.map(({ component: Component = Fragment, path }) => (
+        <Route element={<Component></Component>} path={path} key={path}></Route>
+      ))}
+      <Route element={fallbackElement} path="*"></Route>
+    </Routes>
+  );
+};
+
+export const Pages = () => {
   const App = preserved?.["_app"] || Fragment;
   const NotFound = preserved?.["404"] || Fragment;
 
   return (
     <App
-      routes={
-        <YourRoutes>
-          <Route element={<NotFound></NotFound>} path="*"></Route>
-        </YourRoutes>
-      }
-      routesTree={<RoutesTree></RoutesTree>}
+      routes={<NestedRoutes fallbackElement={<NotFound></NotFound>} tree={nestedRoutes} />}
+      routesList={<RoutesList tree={nestedRoutes} />}
     ></App>
   );
 };
+
+/*
+TODO clean up routes code
+TODO routes tree/list could instead be a dynamic nav list 
+TODO - dynamic routes should have text boxes (with limited character options) allowing the user to specify where to navigate
+TODO - also think about dynamic navigation between nested paths using relative paths and react router dom's "navigate"
+*/

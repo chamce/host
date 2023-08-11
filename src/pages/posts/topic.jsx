@@ -1,5 +1,14 @@
+import { Outlet } from "react-router-dom";
+
 const Component = () => {
-  return <div>View Topic posts</div>;
+  return (
+    <div>
+      <div>View Topic Posts</div>
+      <div>
+        <Outlet></Outlet>
+      </div>
+    </div>
+  );
 };
 
 export default Component;

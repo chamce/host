@@ -1,9 +1,8 @@
 import { Outlet } from "react-router-dom";
-
 const Component = () => {
   return (
     <div>
-      <div>No matching route found</div>
+      <div>Settings index page</div>
       <div>
         <Outlet></Outlet>
       </div>

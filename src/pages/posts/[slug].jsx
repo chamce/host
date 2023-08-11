@@ -1,9 +1,16 @@
-import { useParams } from "react-router-dom";
+import { useParams, Outlet } from "react-router-dom";
 
 const Component = () => {
   const { slug } = useParams();
 
-  return <div>View {slug} posts</div>;
+  return (
+    <div>
+      <div>View {slug} posts</div>
+      <div>
+        <Outlet></Outlet>
+      </div>
+    </div>
+  );
 };
 
 export default Component;

@@ -1,9 +1,16 @@
-import { useParams } from "react-router-dom";
+import { useParams, Outlet } from "react-router-dom";
 
 const Component = () => {
   const { user } = useParams();
 
-  return <div>{user}'s settings page</div>;
+  return (
+    <div>
+      <div>{user}'s settings page</div>
+      <div>
+        <Outlet></Outlet>
+      </div>
+    </div>
+  );
 };
 
 export default Component;

@@ -1,5 +1,14 @@
+import { Outlet } from "react-router-dom";
+
 const Component = () => {
-  return <div>Posts landing page</div>;
+  return (
+    <div>
+      <div>Posts index page</div>
+      <div>
+        <Outlet></Outlet>
+      </div>
+    </div>
+  );
 };
 
 export default Component;
