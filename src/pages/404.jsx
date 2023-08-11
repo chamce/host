@@ -1,10 +1,5 @@
 const Component = () => {
-  return (
-    <div>
-      <h6>404</h6>
-      <div>You have navigated to an invalid route</div>
-    </div>
-  );
+  return <div>No matching route found</div>;
 };
 
 export default Component;

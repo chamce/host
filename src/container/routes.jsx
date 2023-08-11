@@ -91,7 +91,7 @@ const RoutesTree = () => {
   const childNodes = Object.keys(nestedRoutes);
 
   return (
-    <ul>
+    <ul className="m-0">
       {childNodes.map((currentRoot, index) => (
         <RoutesSubtree tree={nestedRoutes[currentRoot]} root={currentRoot} key={index} />
       ))}
